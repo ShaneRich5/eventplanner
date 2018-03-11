@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class PlaceController extends Controller
 {
+    protected $place;
+
+    public function __construct(Place $place)
+    {
+        $this->place = $place;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,8 @@ class PlaceController extends Controller
      */
     public function index()
     {
-        //
+        $places = $this->place->all();
+        return view('places.index', compact('places'));
     }
 
     /**
@@ -24,7 +32,7 @@ class PlaceController extends Controller
      */
     public function create()
     {
-        //
+        return view('places.create');
     }
 
     /**
@@ -35,7 +43,9 @@ class PlaceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only('name', 'description');
+        $place = $this->place->create($data);
+        return response()->json(['place' => $place]);
     }
 
     /**
@@ -46,7 +56,7 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        //
+        return view('places.show', compact('place'));
     }
 
     /**
@@ -57,7 +67,7 @@ class PlaceController extends Controller
      */
     public function edit(Place $place)
     {
-        //
+        return view('places.edit', compact('place'));
     }
 
     /**
@@ -69,7 +79,9 @@ class PlaceController extends Controller
      */
     public function update(Request $request, Place $place)
     {
-        //
+        $data = $request->only('name', 'description');
+        $place->update($data);
+        return response()->json(['place' => $place]);
     }
 
     /**
@@ -80,6 +92,8 @@ class PlaceController extends Controller
      */
     public function destroy(Place $place)
     {
-        //
+        return response()->json([
+            'success' => $place->delete()
+        ]);
     }
 }
