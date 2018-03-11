@@ -26,4 +26,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function reviews()
+    {
+        return $this->belongsTo('App\Review');
+    }
+
+    public function places()
+    {
+        return $this->belongsTo('App\Place');
+    }
+
+    public function events()
+    {
+        return $this->belongsTo('App\Event');
+    }
 }
