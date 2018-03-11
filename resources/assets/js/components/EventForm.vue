@@ -9,9 +9,11 @@ export default {
 			required: true,
 		}
 	},
-	data: {
-		name: '',
-		description: '',
+	data() {
+		return {
+			name: '',
+			description: ''
+		};
 	},
 }
 </script>
