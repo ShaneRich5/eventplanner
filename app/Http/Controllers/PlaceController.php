@@ -65,7 +65,7 @@ class PlaceController extends Controller
     public function show($id)
     {
         $place = $this->place->find($id);
-        $events = $this->event->findByPlaceId($place->id);
+        $events = $this->event->findByPlaceId($id);
         return view('places.show', compact('place'));
     }
 
@@ -104,7 +104,7 @@ class PlaceController extends Controller
     public function destroy($id)
     {
         return response()->json([
-            'success' => $place->delete()
+            'success' => $this->place->destroy()
         ]);
     }
 }

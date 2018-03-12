@@ -2,45 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Review;
-use App\Event;
+use App\Repositories\Review\ReviewRepository as Review;
+use App\Repositories\Event\EventRepository as Event;
+use App\Repositories\User\UserRepository as User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EventReviewController extends Controller
 {
+    protected $event;
+    protected $review;
+    protected $user;
+
+    public function __construct(Event $event, Review $review, User $user)
+    {
+        $this->event = $event;
+        $this->review = $review;
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Event  $event
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function index(Event $event)
+    public function index($eventId)
     {
-        return response()->json([
-            'reviews' => $event->reviews
-        ]);
+        $reviews = $this->review->findByEventId($eventId);
+        return response()->json(compact('reviews'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Event $event)
+    public function store(Request $request, $eventId)
     {
         $user = Auth::user();
-        $data = $request->only('rating', 'body');
+        $data = collect($request->only('rating', 'body'))
+                    ->merge(['user_id' => $user->id])
+                    ->merge(['reviewable_id' => $eventId])
+                    ->merge(['reviewable_type' => 'App\Event'])
+                    ->toArray();
 
-        $review = new Review($data);
-        $review->user_id = $user->id;
-        $review = $event->reviews()->save($review);
+        $review = $this->review()->create($data);
+        $review['user'] = $this->user->find($review['id']);
 
-        return response()->json([
-            'review' => $review
-        ]);
+        return response()->json(['review' => $review]);
     }
 
 
@@ -48,16 +61,16 @@ class EventReviewController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
-     * @param  \App\Review  $review
+     * @param  integer  $eventId
+     * @param  integer  $reviewId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event, Review $review)
+    public function update(Request $request, $eventId, $reviewId)
     {
         $data = $request->only('rating', 'body');
-        $review->update($data);
-        return response()->json([
-            'review' => $review
-        ]);
+        $this->review->update($data, $reviewId);
+        $review = $this->review->find($reviewId);
+        $review['user'] = $this->user->find($review['user_id']);
+        return response()->json(['review' => $review]);
     }
 }

@@ -6,7 +6,7 @@
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					{{ $event->name }}
+					<span>{{ $event->name }} at <a href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a></span>
 					@auth
 						<a href="{{ route('places.events.edit', ['place' => $place->id, 'event' => $event->id]) }}" class="btn btn-default">Edit</a>
 					@endauth
@@ -15,7 +15,11 @@
 					@endguest
 				</div>
 				<div class="panel-body">
-					<p>{{ $event->description }}</p>
+					@if($event->description)
+						<p>{{ $event->description }}</p>
+					@else
+						</p>No description added</p>
+					@endif
 				</div>
 				<review-container
 					:parent="{{ $event }}"

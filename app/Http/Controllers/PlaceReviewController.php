@@ -45,7 +45,8 @@ class PlaceReviewController extends Controller
         $user = Auth::user();
         $data = collect($request->only('rating', 'body'))
                     ->merge(['user_id' => $user->id])
-                    ->merge(['place_id' => $placeId])
+                    ->merge(['reviewable_id' => $placeId])
+                    ->merge(['reviewable_type' => 'App\Place'])
                     ->toArray();
 
         $review = $this->review->create($data);
