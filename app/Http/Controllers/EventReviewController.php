@@ -17,7 +17,9 @@ class EventReviewController extends Controller
      */
     public function index(Event $event)
     {
-        return response()->json(['reviews' => $event->reviews]);
+        return response()->json([
+            'reviews' => $event->reviews
+        ]);
     }
 
     /**

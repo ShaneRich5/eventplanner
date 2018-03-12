@@ -43771,6 +43771,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
@@ -43779,6 +43784,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			default: function _default() {
 				return [];
 			}
+		}
+	},
+	methods: {
+		formatDate: function formatDate(string) {
+			var date = new Date(string);
+			return [date.getMonth() + 1, date.getDate(), date.getFullYear()].join('/');
 		}
 	}
 });
@@ -43794,16 +43805,32 @@ var render = function() {
   return _c("div", [
     _c(
       "ul",
+      { staticClass: "list-group" },
       _vm._l(_vm.reviews, function(review, index) {
-        return _c("li", [
-          _vm._v(
-            "\n\t\t\t" +
-              _vm._s(review.rating) +
+        return _c(
+          "li",
+          { staticClass: "list-group-item" },
+          [
+            _c("star-rating", {
+              attrs: {
+                rating: review.rating,
+                "read-only": "",
+                "show-rating": false,
+                "star-size": 25
+              }
+            }),
+            _vm._v(
               "\n\t\t\t" +
-              _vm._s(review.body) +
-              "\n\t\t"
-          )
-        ])
+                _vm._s(review.body) +
+                " by " +
+                _vm._s(review.user.name) +
+                " on " +
+                _vm._s(_vm.formatDate(review["updated_at"])) +
+                "\n\t\t"
+            )
+          ],
+          1
+        )
       })
     )
   ])
@@ -43909,8 +43936,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "ul",
+    { staticClass: "list-group" },
     _vm._l(_vm.events, function(event, index) {
-      return _c("li", [
+      return _c("li", { staticClass: "list-group-item" }, [
         _c("a", { attrs: { href: _vm.routeForEvent(event.id) } }, [
           _vm._v(_vm._s(event.name))
         ])
@@ -43981,6 +44009,20 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -44085,12 +44127,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			params['review'] = this.userReview.id;
 
 			var url = window.route(this.resource + '.reviews.update', params);
-			console.log('url', url);
 			return axios.put(url, data);
 		},
 		saveReview: function saveReview(data) {
 			var url = window.route(this.resource + '.reviews.store', this.parent.id);
-			console.log('url', url);
 			return axios.post(url, data);
 		},
 		handleUserReviewLoaded: function handleUserReviewLoaded(data) {
@@ -44103,7 +44143,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var index = this.reviewList.findIndex(function (review) {
 				return review['user_id'] == _this4.user.id;
 			});
-			console.log('index', index);
+
 			if (index > -1) {
 				this.$set(this.reviewList, index, review);
 			} else {
@@ -44126,9 +44166,14 @@ var render = function() {
       "div",
       { staticClass: "panel-heading" },
       [
-        _vm._v("\n\t\tReviews "),
+        _vm._v("\n\t\tReviews\n\t\t"),
         _c("star-rating", {
-          attrs: { rating: _vm.overallRating, "read-only": "" }
+          attrs: {
+            rating: _vm.overallRating,
+            "read-only": "",
+            "show-rating": false,
+            "star-size": 25
+          }
         })
       ],
       1
@@ -44145,8 +44190,10 @@ var render = function() {
           ])
         : _c(
             "div",
+            { staticClass: "review-form" },
             [
               _c("star-rating", {
+                attrs: { "star-size": 25, "show-rating": false },
                 model: {
                   value: _vm.userReview.rating,
                   callback: function($$v) {
@@ -44165,7 +44212,7 @@ var render = function() {
                     expression: "userReview.body"
                   }
                 ],
-                attrs: { type: "text" },
+                attrs: { placeholder: "Review body", type: "text" },
                 domProps: { value: _vm.userReview.body },
                 on: {
                   input: function($event) {
@@ -44180,6 +44227,7 @@ var render = function() {
               _c(
                 "button",
                 {
+                  staticClass: "btn btn-default",
                   on: {
                     click: function($event) {
                       _vm.handleUserReviewChange(
@@ -44189,7 +44237,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("Update")]
+                [_vm._v("\n\t\t\t\tUpdate\n\t\t\t")]
               )
             ],
             1

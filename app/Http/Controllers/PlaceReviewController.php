@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Review;
 use App\Place;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlaceReviewController extends Controller
 {
@@ -41,7 +42,16 @@ class PlaceReviewController extends Controller
      */
     public function store(Request $request, Place $place)
     {
-        //
+        $user = Auth::user();
+        $data = $request->only('rating', 'body');
+
+        $review = new Review($data);
+        $review->user_id = $user->id;
+        $review = $place->reviews()->save($review);
+
+        return response()->json([
+            'review' => $review
+        ]);
     }
 
     /**
@@ -78,7 +88,11 @@ class PlaceReviewController extends Controller
      */
     public function update(Request $request, Place $place, Review $review)
     {
-        //
+        $data = $request->only('rating', 'body');
+        $review->update($data);
+        return response()->json([
+            'review' => $review
+        ]);
     }
 
     /**

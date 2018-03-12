@@ -1,15 +1,29 @@
 <template>
 	<div class="panel-default">
 		<div class="panel-heading">
-			Reviews <star-rating :rating="overallRating" read-only></star-rating>
+			Reviews
+			<star-rating
+				:rating="overallRating"
+				read-only
+				:show-rating="false"
+				:star-size="25">
+			</star-rating>
 		</div>
 		<div class="panel-body">
 			<p>Your review</p>
 			<p v-if="user == null">Please <a :href="loginUrl">login</a> in make a review</p>
-			<div v-else>
-				<star-rating v-model="userReview.rating"></star-rating>
-				<input type="text" v-model="userReview.body"/>
-				<button @click="handleUserReviewChange(userReview.rating, userReview.body)">Update</button>
+			<div v-else class="review-form">
+				<star-rating
+					:star-size="25"
+					:show-rating="false"
+					v-model="userReview.rating">
+				</star-rating>
+				<input placeholder="Review body" type="text" v-model="userReview.body"/>
+				<button
+					class="btn btn-default"
+					@click="handleUserReviewChange(userReview.rating, userReview.body)">
+					Update
+				</button>
 			</div>
 			<div>
 				<p>Others</p>
@@ -86,12 +100,10 @@ export default {
 			params['review'] = this.userReview.id;
 
 			const url = window.route(`${this.resource}.reviews.update`, params);
-			console.log('url', url);
 			return axios.put(url, data);
 		},
 		saveReview(data) {
 			const url = window.route(`${this.resource}.reviews.store`, this.parent.id);
-			console.log('url', url);
 			return axios.post(url, data);
 		},
 		handleUserReviewLoaded(data) {
@@ -99,7 +111,7 @@ export default {
 			this.userReview = review;
 
 			const index = this.reviewList.findIndex(review => review['user_id'] == this.user.id);
-			console.log('index', index);
+
 			if (index > -1) {
 				this.$set(this.reviewList, index, review);
 			} else {

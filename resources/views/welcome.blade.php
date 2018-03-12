@@ -41,6 +41,12 @@
                 top: 18px;
             }
 
+            .top-left {
+                position: absolute;
+                left: 10px;
+                top: 18px;
+            }
+
             .content {
                 text-align: center;
             }
@@ -66,6 +72,9 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
+            <div class="top-left links">
+                <a href="{{ route('places.index') }}">More Places</a>
+            </div>
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
@@ -83,11 +92,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <!-- Put event cards -->
                 </div>
             </div>
         </div>

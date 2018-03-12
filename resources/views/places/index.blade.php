@@ -14,13 +14,13 @@
 					@endguest
 				</div>
 				<div class="panel-body">
-					<ul>
-					@forelse($places as $place)
-						<li><a href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a></li>
-					@empty
-						<p>No places available</p>
-					@endforelse
-					</ul>
+					<div class="list-group">
+						@forelse($places as $place)
+							<a class="list-group-item" href="{{ route('places.show', $place->id) }}">{{ $place->name }}</a>
+						@empty
+							<p>No places available</p>
+						@endforelse
+					</div>
 				</div>
 			</div>
 		</div>

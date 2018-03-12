@@ -1,6 +1,6 @@
 <template>
-	<ul>
-		<li v-for="(event, index) in events">
+	<ul class="list-group">
+		<li class="list-group-item" v-for="(event, index) in events">
 			<a :href="routeForEvent(event.id)">{{ event.name }}</a>
 		</li>
 	</ul>
