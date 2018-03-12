@@ -44127,7 +44127,9 @@ var render = function() {
       { staticClass: "panel-heading" },
       [
         _vm._v("\n\t\tReviews "),
-        _c("star-rating", { attrs: { rating: _vm.overallRating } })
+        _c("star-rating", {
+          attrs: { rating: _vm.overallRating, "read-only": "" }
+        })
       ],
       1
     ),

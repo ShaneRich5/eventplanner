@@ -1,7 +1,7 @@
 <template>
 	<div class="panel-default">
 		<div class="panel-heading">
-			Reviews <star-rating :rating="overallRating"></star-rating>
+			Reviews <star-rating :rating="overallRating" read-only></star-rating>
 		</div>
 		<div class="panel-body">
 			<p>Your review</p>
