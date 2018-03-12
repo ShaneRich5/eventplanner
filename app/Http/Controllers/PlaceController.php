@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Place;
+use App\Repositories\Place\PlaceRepository as Place;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,29 +46,32 @@ class PlaceController extends Controller
     {
         $user = Auth::user();
         $data = $request->only('name', 'description');
-        $place = $user->places()->save(new Place($data));
+        $data->put('user_id', $user->id);
+        $place = $this->place()->create($data);
         return response()->json(['place' => $place]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Place $place)
+    public function show($id)
     {
+        $place = $this->place->find($id);
         return view('places.show', compact('place'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Place $place)
+    public function edit($id)
     {
+        $place = $this->place->find($id);
         return view('places.edit', compact('place'));
     }
 
@@ -76,23 +79,23 @@ class PlaceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Place  $place
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Place $place)
+    public function update(Request $request, $id)
     {
         $data = $request->only('name', 'description');
-        $place->update($data);
+        $place = $this->place->update($data, $id);
         return response()->json(['place' => $place]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Place $place)
+    public function destroy($id)
     {
         return response()->json([
             'success' => $place->delete()
