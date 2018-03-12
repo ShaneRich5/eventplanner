@@ -2,108 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Review;
-use App\Place;
+use App\Repositories\Review\ReviewRepository as Review;
+use App\Repositories\Place\PlaceRepository as Place;
+use App\Repositories\User\UserRepository as User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PlaceReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \App\Place  $place
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Place $place)
+    protected $place;
+    protected $review;
+    protected $user;
+
+    public function __construct(Place $place, Review $review, User $user)
     {
-        return response()->json([
-            'reviews' => $place->reviews
-        ]);
+        $this->place = $place;
+        $this->review = $review;
+        $this->user = $user;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function create(Place $place)
+    public function index($id)
     {
-        //
+        $reviews = $this->review->findByPlaceId($id);
+        return response()->json(['reviews' => $reviews]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Place  $place
+     * @param  integer  $placeId
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Place $place)
+    public function store(Request $request, $placeId)
     {
         $user = Auth::user();
-        $data = $request->only('rating', 'body');
+        $data = collect($request->only('rating', 'body'))
+                    ->merge(['user_id' => $user->id])
+                    ->merge(['place_id' => $placeId])
+                    ->toArray();
 
-        $review = new Review($data);
-        $review->user_id = $user->id;
-        $review = $place->reviews()->save($review);
+        $review = $this->review->create($data);
+        $review['user'] = $this->user->find($review['id']);
 
-        return response()->json([
-            'review' => $review
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Place  $place
-     * @param  \App\Review  $review
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Place $place, Review $review)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Place  $place
-     * @param  \App\Review  $review
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Place $place, Review $review)
-    {
-        //
+        return response()->json(['review' => $review]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Place  $place
-     * @param  \App\Review  $review
+     * @param  integer  $placeId
+     * @param  integer  $reviewId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Place $place, Review $review)
+    public function update(Request $request, $placeId, $reviewId)
     {
         $data = $request->only('rating', 'body');
-        $review->update($data);
-        return response()->json([
-            'review' => $review
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Place  $place
-     * @param  \App\Review  $review
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Place $place, Review $review)
-    {
-        //
+        $this->review->update($data, $reviewId);
+        $review = $this->review->find($reviewId);
+        $review['user'] = $this->user->find($review['user_id']);
+        return response()->json(['review' => $review]);
     }
 }

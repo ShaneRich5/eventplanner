@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Place\PlaceRepository as Place;
+use App\Repositories\Event\EventRepository as Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PlaceController extends Controller
 {
     protected $place;
+    protected $event;
 
-    public function __construct(Place $place)
+    public function __construct(Place $place, Event $event)
     {
         $this->place = $place;
+        $this->event = $event;
     }
 
     /**
@@ -45,9 +48,11 @@ class PlaceController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $data = $request->only('name', 'description');
-        $data->put('user_id', $user->id);
-        $place = $this->place()->create($data);
+        $data = collect($request->only('name', 'description'))
+                    ->merge(['user_id' => $user->id])
+                    ->toArray();
+
+        $place = $this->place->create($data);
         return response()->json(['place' => $place]);
     }
 
@@ -60,6 +65,7 @@ class PlaceController extends Controller
     public function show($id)
     {
         $place = $this->place->find($id);
+        $events = $this->event->findByPlaceId($place->id);
         return view('places.show', compact('place'));
     }
 

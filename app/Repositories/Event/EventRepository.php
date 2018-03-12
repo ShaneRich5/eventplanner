@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Respositories\EventRepository;
+namespace App\Repositories\Event;
 
-use App\Respositories\EloquentRepository;
-use App\Respositories\Event\EventInterface;
+use App\Repositories\EloquentRepository;
+use App\Repositories\Event\EventInterface;
 
 class EventRepository extends EloquentRepository implements EventInterface {
 
-    protected $modelClassName = 'Event';
+    protected $modelClassName = 'App\Event';
 
+    public function findByPlaceId($placeId)
+    {
+        return $this->find($placeId, 'place_id');
+    }
 }

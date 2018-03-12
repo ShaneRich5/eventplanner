@@ -26,7 +26,6 @@
 				</button>
 			</div>
 			<div>
-				<p>Others</p>
 				<review-list
 					v-if="reviewList.length > 0"
 					:reviews="reviewList"
@@ -108,7 +107,7 @@ export default {
 		},
 		handleUserReviewLoaded(data) {
 			const { review } = data;
-			this.userReview = review;
+			this.userReview = Object.assign({}, review);
 
 			const index = this.reviewList.findIndex(review => review['user_id'] == this.user.id);
 

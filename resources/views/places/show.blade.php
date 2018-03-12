@@ -15,7 +15,11 @@
 					@endguest
 				</div>
 				<div class="panel-body">
-					<p>{{ $place->description }}</p>
+					@if($place->description)
+						<p>{{ $place->description }}</p>
+					@else
+						</p>No description added</p>
+					@endif
 				</div>
 				<div class="panel-heading">
 					<b>Events</b>

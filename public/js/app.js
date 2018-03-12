@@ -44049,7 +44049,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
@@ -44138,7 +44137,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			var review = data.review;
 
-			this.userReview = review;
+			this.userReview = Object.assign({}, review);
 
 			var index = this.reviewList.findIndex(function (review) {
 				return review['user_id'] == _this4.user.id;
@@ -44246,8 +44245,6 @@ var render = function() {
       _c(
         "div",
         [
-          _c("p", [_vm._v("Others")]),
-          _vm._v(" "),
           _vm.reviewList.length > 0
             ? _c("review-list", { attrs: { reviews: _vm.reviewList } })
             : _c("p", [_vm._v("\n\t\t\t\tNo reviews added yet\n\t\t\t")])

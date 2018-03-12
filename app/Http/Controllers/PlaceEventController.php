@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Place;
+use App\Repositories\Place\PlaceRepository as Place;
+use App\Repositories\Event\EventRepository as Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PlaceEventController extends Controller
 {
+    protected $place;
+    protected $event;
+
+    public function __construct(Place $place, Event $event)
+    {
+        $this->place = $place;
+        $this->event = $event;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $placeId
      * @return \Illuminate\Http\Response
      */
-    public function index(Place $place)
+    public function index($placeId)
     {
         //
     }
@@ -23,53 +32,58 @@ class PlaceEventController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param  \App\Place  $place
+     * @param  integer  $placeId
      * @return \Illuminate\Http\Response
      */
-    public function create(Place $place)
+    public function create($placeId)
     {
+        $place = $this->place->find($placeId);
         return view('places.events.create', compact('place'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Place  $place
+     * @param  \Illuminate\Http\Request  $placeIequest
+     * @param  integer  $placeId
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Place $place)
+    public function store(Request $request, $placeId)
     {
         $user = Auth::user();
-        $data = $request->only('name', 'description');
-        $event = new Event($data);
-        $event->user_id = $user->id;
-        $event->place_id = $place->id;
-        $event->save();
+        $data = collect($request->only('name', 'description'))
+                    ->merge(['user_id' => $user->id])
+                    ->merge(['place_id' => $placeId])
+                    ->toArray();
+        $event = $this->event->create($data);
         return response()->json(['event' => $event]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Place  $place
-     * @param  \App\Event  $event
+     * @param  integer  $placeId
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function show(Place $place, Event $event)
+    public function show($placeId, $eventId)
     {
+        $place = $this->place->find($placeId);
+        $event = $this->event->find($eventId);
         return view('places.events.show', compact('place', 'event'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Place  $place
-     * @param  \App\Event  $event
+     * @param  integer  $placeId
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function edit(Place $place, Event $event)
+    public function edit($placeId, $eventId)
     {
+        $place = $this->place->find($placeId);
+        $event = $this->event->find($eventId);
         return view('places.events.edit', compact('place', 'event'));
     }
 
@@ -77,27 +91,25 @@ class PlaceEventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Place  $place
-     * @param  \App\Event  $event
+     * @param  integer  $placeId
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Place $place, Event $event)
+    public function update(Request $request, $placeId, $eventId)
     {
         $data = $request->only('name', 'description');
-        $event->update($data);
-        return response()->json([
-            'event' => $event
-        ]);
+        $event = $this->event->update($data, $eventId);
+        return response()->json(['event' => $event]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Place  $place
-     * @param  \App\Event  $event
+     * @param  integer  $placeId
+     * @param  integer  $eventId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Place $place, Event $event)
+    public function destroy($placeId, $eventId)
     {
         //
     }

@@ -16,9 +16,10 @@ abstract class EloquentRepository implements RepositoryInterface
 	{
 		return call_user_func_array("{$this->modelClassName}::all", array($columns));
 	}
-	public function find($id, $columns = array('*'))
+
+	public function find($id, $attribute = 'id')
 	{
-		return call_user_func_array("{$this->modelClassName}::find", array($id, $columns));
+		return call_user_func_array("{$this->modelClassName}::where", array($attribute, '=', $id))->firstOrFail();
 	}
 
 	public function destroy($ids)

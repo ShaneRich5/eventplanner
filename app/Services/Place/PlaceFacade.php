@@ -7,5 +7,4 @@ use App\Services\Place\PlaceFacade;
 
 class PlaceFacade
 {
-
 }
