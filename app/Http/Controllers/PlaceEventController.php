@@ -16,6 +16,7 @@ class PlaceEventController extends Controller
     {
         $this->place = $place;
         $this->event = $event;
+        $this->middleware('auth')->except('show');
     }
 
     /**

@@ -20,6 +20,7 @@ class EventReviewController extends Controller
         $this->event = $event;
         $this->review = $review;
         $this->user = $user;
+        $this->middleware('auth')->except('index');
     }
 
     /**

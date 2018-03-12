@@ -19,6 +19,7 @@ class PlaceReviewController extends Controller
         $this->place = $place;
         $this->review = $review;
         $this->user = $user;
+        $this->middleware('auth')->except('index');
     }
 
     /**
