@@ -17,6 +17,8 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('description')->nullalbe();
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('place_id')->unsigned();
             $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
             $table->timestamps();

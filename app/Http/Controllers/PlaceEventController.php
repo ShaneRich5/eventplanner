@@ -2,74 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use App\Place;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PlaceController extends Controller
+class PlaceEventController extends Controller
 {
-    protected $place;
-
-    public function __construct(Place $place)
-    {
-        $this->place = $place;
-    }
-
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Place  $place
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Place $place)
     {
-        $places = $this->place->all();
-        return view('places.index', compact('places'));
+        //
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \App\Place  $place
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Place $place)
     {
-        return view('places.create');
+        return view('places.events.create', compact('place'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Place  $place
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Place $place)
     {
         $user = Auth::user();
         $data = $request->only('name', 'description');
-        $place = $user->places()->save(new Place($data));
-        return response()->json(['place' => $place]);
+        $event = new Event($data);
+        $event->user_id = $user->id;
+        $event->place_id = $place->id;
+        $event->save();
+        return response()->json(['event' => $event]);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Place  $place
+     * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function show(Place $place)
+    public function show(Place $place, Event $event)
     {
-        return view('places.show', compact('place'));
+        return view('places.events.show', compact('place', 'event'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Place  $place
+     * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function edit(Place $place)
+    public function edit(Place $place, Event $event)
     {
-        return view('places.edit', compact('place'));
+        return view('places.events.edit', compact('place', 'event'));
     }
 
     /**
@@ -77,25 +78,27 @@ class PlaceController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Place  $place
+     * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Place $place)
+    public function update(Request $request, Place $place, Event $event)
     {
         $data = $request->only('name', 'description');
-        $place->update($data);
-        return response()->json(['place' => $place]);
+        $event->update($data);
+        return response()->json([
+            'event' => $event
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Place  $place
+     * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Place $place)
+    public function destroy(Place $place, Event $event)
     {
-        return response()->json([
-            'success' => $place->delete()
-        ]);
+        //
     }
 }

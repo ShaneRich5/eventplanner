@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillabe = ['name', 'description'];
+    protected $fillable = ['name', 'description'];
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 
     public function reviews()
     {

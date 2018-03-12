@@ -9,15 +9,19 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+import StarRating from 'vue-star-rating';
 
+// Components from packages
+Vue.component('star-rating', StarRating);
+
+// Custom components
 Vue.component('place-form', require('./components/PlaceForm.vue'));
 Vue.component('event-form', require('./components/EventForm.vue'));
 Vue.component('review-form', require('./components/ReviewForm.vue'));
+Vue.component('review-list', require('./components/ReviewList.vue'));
+Vue.component('event-list', require('./components/EventList.vue'));
+// Custom containers
+Vue.component('review-container', require('./containers/ReviewContainer.vue'));
 
 const app = new Vue({
     el: '#app'

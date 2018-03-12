@@ -5,12 +5,9 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading">
-					Edit {{ $place->name }}
-					<a href="{{ route('places.show', $place->id) }}" class="btn btn-default">Cancel</a>
-				</div>
+				<div class="panel-heading">Edit Event at {{ $place->name}}</div>
 				<div class="panel-body">
-					<place-form :place="{{ $place }}"></place-form>
+					<event-form :event="{{ $event }}" :place-id="{{ $place->id }}"></event-form>
 				</div>
 			</div>
 		</div>

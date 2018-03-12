@@ -34,11 +34,11 @@ class User extends Authenticatable
 
     public function places()
     {
-        return $this->belongsTo('App\Place');
+        return $this->hasMany('App\Place');
     }
 
     public function events()
     {
-        return $this->belongsTo('App\Event');
+        return $this->hasMany('App\Event');
     }
 }

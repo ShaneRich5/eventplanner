@@ -19,3 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('places', 'PlaceController');
+Route::resource('places.events', 'PlaceEventController');
+Route::resource('places.reviews', 'PlaceReviewController');
+Route::resource('events.reviews', 'EventReviewController');
