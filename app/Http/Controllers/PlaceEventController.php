@@ -19,17 +19,6 @@ class PlaceEventController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @param  integer  $placeId
-     * @return \Illuminate\Http\Response
-     */
-    public function index($placeId)
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param  integer  $placeId
@@ -102,15 +91,4 @@ class PlaceEventController extends Controller
         return response()->json(['event' => $event]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  integer  $placeId
-     * @param  integer  $eventId
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($placeId, $eventId)
-    {
-        //
-    }
 }

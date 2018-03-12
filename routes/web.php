@@ -19,6 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('places', 'PlaceController');
-Route::resource('places.events', 'PlaceEventController');
-Route::resource('places.reviews', 'PlaceReviewController');
-Route::resource('events.reviews', 'EventReviewController');
+Route::resource('places.events', 'PlaceEventController', ['except' => ['index', 'destroy']]);
+Route::resource('places.reviews', 'PlaceReviewController', ['only' => ['index', 'store', 'update']]);
+Route::resource('events.reviews', 'EventReviewController', ['only' => ['index', 'store', 'update']]);
